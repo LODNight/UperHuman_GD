@@ -1,26 +1,27 @@
-/// @function init_weapon_database():
-/// @description Khởi tạo dữ liệu toàn cục cho game (Chỉ gọi 1 lần duy nhất)
-function init_weapon_database() {
-    global.weapons = [
-        {}, // [0] Bỏ trống
-        
-        {   // [1] Súng lục
-            name: "Pistol",
-            rate: 35, 
-            obj: obj_ammo_1, 
-            spd: 12,
-            damage: 10,
-            sound: snd_pistol
-        },
-        
-        {   // [2] Súng máy
-            name: "SMG",
-            rate: 5, 
-            obj: obj_ammo_1, 
-            spd: 15,
-            damage: 5,
-            sound: snd_smg
+
+/// @function load_weapons_data()
+function load_weapons_data() {
+    // 1. TẠO TỪ ĐIỂN MAPPING (Tất cả âm thanh, đạn... khai báo hết ở đây)
+    global.asset_map = {
+        "snd_pistol_shot_1": snd_pistol_shot_1,
+        "snd_smg_shot_1": snd_smg_shot_1,
+        "obj_ammo_1": obj_ammo_1
+    };
+
+    // 2. ĐỌC FILE JSON NHƯ CŨ
+    if (file_exists("weapons.json")) {
+        var _file = file_text_open_read("weapons.json");
+        var _json_string = "";
+		
+        while (!file_text_eof(_file)) {
+            _json_string += file_text_read_string(_file);
+            file_text_readln(_file);
         }
-        // Kéo dài bao nhiêu cũng được, code rất dễ nhìn
-    ];
+        file_text_close(_file);
+        
+		
+        global.weapons = json_parse(_json_string);
+    } else {
+        show_debug_message("LỖI: Không tìm thấy file weapons.json!");
+    }
 }

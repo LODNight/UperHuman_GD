@@ -1,26 +1,10 @@
+load_weapons_data()
+
 window_set_fullscreen(true)
 
 window_set_cursor(cr_none);
 
 cursor_sprite = spr_aim;
-
-
-// Kiểm tra xem file có tồn tại không
-if (file_exists("weapons.json")) {
-    // Mở file và đọc toàn bộ nội dung thành dạng chuỗi (string)
-    var _file = file_text_open_read("weapons.json");
-    var _json_string = "";
-    
-    while (!file_text_eof(_file)) {
-        _json_string += file_text_read_string(_file);
-        file_text_readln(_file);
-    }
-    file_text_close(_file);
-    
-    // Dịch chuỗi JSON thành Array/Struct trong GameMaker
-    global.weapons = json_parse(_json_string);
-}
-
 
 
 // 1. Khai báo kích thước 1 ô gạch (Tile) của bạn - Thường là 16 hoặc 32

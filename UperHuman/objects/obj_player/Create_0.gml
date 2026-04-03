@@ -17,33 +17,11 @@ knockback_dir = 0;
 var _layer_id = layer_get_id("Tiles_Collision");
 collision_tilemap = layer_tilemap_get_id(_layer_id);
 
-// --- THÔNG SỐ SÚNG ---
+
+// --- HỆ THỐNG VŨ KHÍ ---
 shoot_cooldown = 0;
+current_weapon = 1; // Bắt đầu với súng lục
 
-
-// --- KHAI BÁO KHO VŨ KHÍ (WEAPON DATABASE) ---
-// Vị trí [0] bỏ trống để tương ứng với phím 1, 2, 3... cho dễ nhớ
-global.weapons = [
-    {}, // [0] Không dùng
-    
-    {   // [1] Súng lục (Pistol)
-        rate: 35, 
-        obj: obj_ammo_1, 
-        spd: 12 
-    },
-    
-    {   // [2] Súng máy (SMG)
-        rate: 5, 
-        obj: obj_ammo_1, 
-        spd: 15 
-    }
-    // Sau này thêm [3] Shotgun, [4] Sniper chỉ cần viết thêm vào đây!
-];
-
-// Khởi tạo vũ khí mặc định
-current_weapon = 1; 
 var _start_gun = global.weapons[current_weapon];
 
-gun_fire_rate = _start_gun.rate;
-gun_bullet_obj = _start_gun.obj;
-gun_bullet_speed = _start_gun.spd;
+apply_weapon(_start_gun)

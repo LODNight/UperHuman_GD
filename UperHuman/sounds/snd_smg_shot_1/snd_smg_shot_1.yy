@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"snd_pistol_shot_1",
+  "%Name":"snd_smg_shot_1",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -12,7 +12,7 @@
   "conversionMode":0,
   "duration":1.1014966,
   "exportDir":"",
-  "name":"snd_pistol_shot_1",
+  "name":"snd_smg_shot_1",
   "parent":{
     "name":"Gun",
     "path":"folders/Sounds/SFX/Gun.yy",
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"snd_pistol_shot_1.mp3",
+  "soundFile":"snd_smg_shot_1.mp3",
   "volume":1.0,
 }

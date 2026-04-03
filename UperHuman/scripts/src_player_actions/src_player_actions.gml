@@ -43,53 +43,60 @@ function player_movement() {
     }
     y += _vspd;
 }
+
+
 /// @description: Hàm bắn súng
 function player_shoot() {
     if (shoot_cooldown > 0) shoot_cooldown--;
 
     if (mouse_check_button(mb_left) && shoot_cooldown <= 0) {
         
-        // Thay 0.5 bằng khoảng cách từ tâm đến nòng súng (Ví dụ: 25 pixel)
-        var _distance_to_barrel = 25; 
+        // 1. Khoảng cách đẩy ra phía trước (Chiều dài súng)
+        var _forward_dist = gun_length; 
         
-        var _x_offset = lengthdir_x(_distance_to_barrel, image_angle); 
-        var _y_offset = lengthdir_y(_distance_to_barrel, image_angle);
+        // 2. Khoảng cách dời sang ngang (Lệch sang phải nòng súng)
+        //  Số dương (10) lệch phải, số âm (-10) lệch trái.
+        var _side_dist = 5; 
+
+        // Tính tọa độ đẩy tới trước
+        var _x_forward = lengthdir_x(_forward_dist, image_angle);
+        var _y_forward = lengthdir_y(_forward_dist, image_angle);
         
-        // --- CODE ÂM THANH ---
-        var _random_snd = choose(snd_pistol_shot_1, snd_pistol_shot_1);
-        var _snd_id = audio_play_sound(_random_snd, 1, false);
+        // Tính tọa độ dời sang ngang (Trừ đi 90 độ để lấy góc bên phải)
+        var _x_side = lengthdir_x(_side_dist, image_angle - 90);
+        var _y_side = lengthdir_y(_side_dist, image_angle - 90);
         
-        // --- TẠO ĐẠN ---
-        // Vị trí tạo đạn bây giờ là Tâm nhân vật (x, y) + Độ dời ra nòng súng (_x_offset, _y_offset)
-        var _bullet = instance_create_layer(x + _x_offset, y + _y_offset, "Instances_Projectiles", gun_bullet_obj);
+        // Cộng dồn vị trí gốc của Player + Độ vươn tới + Độ lệch ngang
+        var _spawn_x = x + _x_forward + _x_side;
+        var _spawn_y = y + _y_forward + _y_side;
+        
+		if (gun_sound != -1) {
+		    audio_play_sound(gun_sound, 1, false);
+		} else {
+		    show_debug_message("ERROR: gun_sound not found!");
+		}
+        
+        // Tạo đạn ở vị trí đã tính toán
+        var _bullet = instance_create_layer(_spawn_x, _spawn_y, "Instances_Projectiles", obj_ammo_1);
+        
         _bullet.direction = image_angle;
         _bullet.image_angle = image_angle;
         _bullet.speed = gun_bullet_speed; 
+        
         shoot_cooldown = gun_fire_rate;
     }
 }
 
-
-/// @description: Hàm đổi vũ khí tối ưu
+/// @description: Hàm đổi vũ khí 
 function player_switch_weapon() {
-    // Duyệt qua các phím từ 1 đến số lượng súng đang có trong mảng
     for (var i = 1; i < array_length(global.weapons); i++) {
-        
-        // Nếu người chơi bấm phím số 'i' và phím đó khác súng đang cầm
         if (keyboard_check_pressed(ord(string(i))) && current_weapon != i) {
-            
-            // Cập nhật ID súng hiện tại
             current_weapon = i;
+            var _gun_data = global.weapons[current_weapon];
             
-            // Lấy cục dữ liệu của súng tương ứng ra
-            var _gun_data = global.weapons[i];
-			
-            // Cập nhật toàn bộ thông số
-            gun_fire_rate = _gun_data.rate;
-            gun_bullet_obj = _gun_data.obj;
-            gun_bullet_speed = _gun_data.spd;
+            apply_weapon(_gun_data)
             
-            break; // Đổi súng xong thì thoát vòng lặp ngay cho nhẹ máy
+            break; 
         }
     }
 }

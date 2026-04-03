@@ -1,0 +1,23 @@
+[
+    {},
+    {
+        "id": 1,
+        "name": "Pistol",
+        "rate": 35,
+        "spd": 12,
+        "damage": 10,
+        "length": 1,
+        "side_offset": 8,
+        "sound_name": "snd_pistol_shot_1"
+    },
+    {
+        "id": 2,
+        "name": "SMG",
+        "rate": 5,
+        "spd": 15,
+        "damage": 5,
+        "length": 1,
+        "side_offset": 10,
+        "sound_name": "snd_smg_shot_1"
+    }
+]
