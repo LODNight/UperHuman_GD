@@ -3,24 +3,41 @@ function apply_weapon(_gun_data) {
     gun_bullet_speed = _gun_data.spd;
     gun_damage = _gun_data.damage;
     gun_length = _gun_data.length;
-	
-	// --- DÙNG MAPPING ĐỂ LẤY ÂM THANH ---
-	var _snd_name = string_trim(_gun_data.sound_name);
+    
+    // --- DÙNG MAPPING ĐỂ LẤY ÂM THANH ---
+    var _snd_name = string_trim(_gun_data.sound_name);
 
-	// Kiểm tra xem tên âm thanh này có trong từ điển không
-	if (variable_struct_exists(global.asset_map, _snd_name)) {
-	    gun_sound = global.asset_map[$ _snd_name]; // Lấy dữ liệu từ Map
-	} else {
-	    show_debug_message("⚠️ LỖI: Không có âm thanh [" + _snd_name + "] trong Asset Map!");
-	    gun_sound = snd_pistol_shot_1; // Mặc định nếu viết sai trong JSON
-	}
-	
-	
-	if (variable_struct_exists(_gun_data, "range")) {
-		gun_range = _gun_data.range;
-	} else {
-	    gun_range = 500; // Tầm bắn mặc định 
-	}
-	
-	
+    if (variable_struct_exists(global.asset_map, _snd_name)) {
+        gun_sound = global.asset_map[$ _snd_name]; 
+    } else {
+        show_debug_message("⚠️ LỖI: Không có âm thanh [" + _snd_name + "] trong Asset Map!");
+        gun_sound = snd_pistol_shot_1; 
+    }
+    
+    if (variable_struct_exists(_gun_data, "range")) {
+        gun_range = _gun_data.range;
+    } else {
+        gun_range = 500; 
+    }
+    
+    // ==========================================
+    // CHUYỂN PHẦN CHECK SHOTGUN VÀ ĐỘ LỆCH VÀO ĐÂY
+    // ==========================================
+    // KIỂM TRA SÚNG CÓ BẮN NHIỀU VIÊN KHÔNG
+    if (variable_struct_exists(_gun_data, "bullet_count")) {
+        gun_bullet_count = _gun_data.bullet_count;
+        gun_spread_angle = _gun_data.spread_angle;
+    } else {
+        gun_bullet_count = 1;
+        gun_spread_angle = 0; 
+    }
+    
+    // KIỂM TRA ĐỘ LỆCH NGẪU NHIÊN
+    if (variable_struct_exists(_gun_data, "spawn_offset")) {
+        gun_spawn_offset = _gun_data.spawn_offset;
+        gun_range_variation = _gun_data.range_variation;
+    } else {
+        gun_spawn_offset = 0; 
+        gun_range_variation = 0; 
+    }
 }

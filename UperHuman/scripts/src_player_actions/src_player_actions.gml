@@ -76,15 +76,50 @@ function player_shoot() {
 		    show_debug_message("ERROR: gun_sound not found!");
 		}
         
-        // Tạo đạn ở vị trí đã tính toán
-        var _bullet = instance_create_layer(_spawn_x, _spawn_y, "Instances_Projectiles", obj_ammo_1);
-        
-        _bullet.direction = image_angle;
-        _bullet.image_angle = image_angle;
-        _bullet.speed = gun_bullet_speed; 
-		
-		_bullet.max_range = gun_range
-		_bullet.damage = gun_damage
+        var _start_angle = image_angle - (gun_spread_angle / 2);
+        var _angle_step = 0;
+        if (gun_bullet_count > 1) {
+            _angle_step = gun_spread_angle / (gun_bullet_count - 1);
+        }
+
+        for (var i = 0; i < gun_bullet_count; i++) {
+            
+            // Tính góc hướng bay
+            var _bullet_dir = _start_angle + (i * _angle_step);
+            
+            // Tùy chọn: Thêm độ giật (Recoil) ngẫu nhiên
+            var _recoil = random_range(-2, 2); 
+            _bullet_dir += _recoil;
+            
+            // ==========================================
+            // NÂNG CẤP MỚI: TÍNH TOÁN ĐỘ LỆCH NGẪU NHIÊN TẠI ĐÂY
+            // ==========================================
+            
+            // 2. Tính toán Vị trí xuất phát ngẫu nhiên cho mỗi viên đạn
+            // Lệch ngẫu nhiên quanh điểm xuất phát trung tâm dựa trên 'spawn_offset'
+            var _final_spawn_x = _spawn_x + random_range(-gun_spawn_offset, gun_spawn_offset);
+            var _final_spawn_y = _spawn_y + random_range(-gun_spawn_offset, gun_spawn_offset);
+            
+            // 3. Tính toán Tầm bắn ngẫu nhiên cho mỗi viên đạn
+            // Lệch ngẫu nhiên quanh tầm bắn cơ bản dựa trên 'range_variation'
+            var _final_range = gun_range + random_range(-gun_range_variation, gun_range_variation);
+            
+            // ==========================================
+            // TẠO ĐẠN Ở VỊ TRÍ VÀ TẦM BẮN ĐÃ ĐƯỢC "BIẾN THIÊN"
+            // ==========================================
+            var _bullet = instance_create_layer(_final_spawn_x, _final_spawn_y, "Instances_Projectiles", obj_ammo_1);
+            
+            // Gán thông số
+            _bullet.direction = _bullet_dir; 
+            _bullet.image_angle = _bullet_dir; 
+            
+            // Tùy chọn: Shotgun ngoài đời mảnh đạn bay không đều nhau
+            _bullet.speed = gun_bullet_speed + random_range(-2, 2); 
+            
+            // TRUYỀN TẦM BẮN VÀ SÁT THƯƠNG (BẮT BUỘC KHAI BÁO BIẾN damage VÀ max_range TRONG CREATE CỦA obj_ammo_1)
+            _bullet.max_range = _final_range; // Sử dụng tầm bắn ngẫu nhiên
+            _bullet.damage = gun_damage; 
+        }
         
         shoot_cooldown = gun_fire_rate;
     }
@@ -97,7 +132,8 @@ function player_switch_weapon() {
             current_weapon = i;
             var _gun_data = global.weapons[current_weapon];
             
-            apply_weapon(_gun_data)
+            // Chỉ cần gọi 1 hàm duy nhất này là tự động cập nhật A-Z!
+            apply_weapon(_gun_data);
             
             break; 
         }
