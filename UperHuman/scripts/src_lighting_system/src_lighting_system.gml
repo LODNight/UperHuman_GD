@@ -30,7 +30,7 @@ function lighting_draw() {
     surface_set_target(darkness_surf);
     
     // Phủ màu đen (0.95 là tối thui, 0.25 là mờ mờ để test)
-    draw_clear_alpha(c_black, 0.95); 
+    draw_clear_alpha(c_black, 0.25); 
 
     // 4. Chuyển sang chế độ Cắt Lỗ
     gpu_set_blendmode(bm_subtract);
@@ -45,7 +45,7 @@ function lighting_draw() {
         // -- THÔNG SỐ ĐÈN PIN --
         // (Sau này bạn có thể đưa các số này vào JSON của từng khẩu súng!)
         var _view_dist = 400; 
-        var _fov = 100;       
+        var _fov = 80;       
         var _steps = 20;      
         
         var _start_angle = obj_player.image_angle - (_fov / 2);
@@ -56,18 +56,27 @@ function lighting_draw() {
         draw_set_alpha(1);
         
         draw_primitive_begin(pr_trianglefan);
-        draw_vertex(_px, _py); // Điểm gốc ở tâm người chơi
         
+        // ĐIỂM SỐ 1: Tâm người chơi (Sáng nhất -> c_white, alpha 1)
+        draw_vertex_color(_px, _py, c_white, 0.7); 
+        
+        // Vòng lặp vẽ các điểm ngoài rìa
         for (var i = 0; i <= _steps; i++) {
             var _current_angle = _start_angle + (i * _angle_step);
             var _vx = _px + lengthdir_x(_view_dist, _current_angle);
             var _vy = _py + lengthdir_y(_view_dist, _current_angle);
-            draw_vertex(_vx, _vy);
+            
+            // CÁC ĐIỂM RÌA: Nằm ở xa (Mờ nhất -> c_black, alpha 0)
+            draw_vertex_color(_vx, _vy, c_black, 0);
+			
+
         }
+        
         draw_primitive_end();
         
-        // -- VẼ VÒNG SÁNG NHỎ DƯỚI CHÂN --
-        draw_circle(_px, _py, 80, false);
+        // -- VẼ VÒNG SÁNG NHỎ DƯỚI CHÂN VỚI RÌA MỜ --
+        // Thay thế draw_circle bằng draw_circle_color
+        // Tâm màu Trắng (c_white), Rìa màu Đen (c_black), false = đổ màu đặc
     }
 
     // 5. Kết thúc khoét lỗ và trả lại cài đặt cũ

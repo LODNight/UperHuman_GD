@@ -84,6 +84,7 @@ function player_shoot() {
         _bullet.speed = gun_bullet_speed; 
 		
 		_bullet.max_range = gun_range
+		_bullet.damage = gun_damage
         
         shoot_cooldown = gun_fire_rate;
     }
