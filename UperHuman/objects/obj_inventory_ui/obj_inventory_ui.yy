@@ -1,18 +1,18 @@
 {
   "$GMObject":"",
-  "%Name":"obj_HUD",
+  "%Name":"obj_inventory_ui",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":64,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_HUD",
+  "name":"obj_inventory_ui",
   "overriddenProperties":[],
   "parent":{
     "name":"UI",
     "path":"folders/Objects/_Controller/UI.yy",
   },
   "parentObjectId":null,
-  "persistent":true,
+  "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
   "physicsFriction":0.2,

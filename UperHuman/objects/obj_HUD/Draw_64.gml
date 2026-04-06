@@ -13,4 +13,12 @@ var _hp_color = merge_color(c_red, c_green, _hp_percent);
 
 // --- VẼ THANH MÁU ---
 // Gọi hàm vẽ và truyền cái biến _hp_color vừa tính được vào
-draw_stat_bar(_gui_w / 2, _gui_h - 45, 300, 15, obj_player.hp, obj_player.hp_max, _hp_color);
+draw_stat_bar(
+	_gui_w / 2, 
+	_gui_h - 45,
+	300, 
+	15, 
+	obj_player.hp, 
+	obj_player.hp_max, 
+	_hp_color
+);

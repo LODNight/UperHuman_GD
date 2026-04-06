@@ -9,8 +9,8 @@
   "name":"obj_spawner",
   "overriddenProperties":[],
   "parent":{
-    "name":"Controller",
-    "path":"folders/Objects/Controller.yy",
+    "name":"_Controller",
+    "path":"folders/Objects/_Controller.yy",
   },
   "parentObjectId":null,
   "persistent":false,

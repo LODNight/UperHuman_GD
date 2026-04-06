@@ -17,3 +17,4 @@ function draw_stat_bar(_x, _y, _width, _height, _current_val, _max_val, _color_f
 
     draw_set_color(c_white); // Reset màu
 }
+

@@ -82,6 +82,8 @@ function player_shoot() {
         _bullet.direction = image_angle;
         _bullet.image_angle = image_angle;
         _bullet.speed = gun_bullet_speed; 
+		
+		_bullet.max_range = gun_range
         
         shoot_cooldown = gun_fire_rate;
     }

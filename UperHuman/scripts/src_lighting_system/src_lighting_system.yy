@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"src_lighting_system",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"src_lighting_system",
+  "parent":{
+    "name":"Ui",
+    "path":"folders/Scripts/Ui.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

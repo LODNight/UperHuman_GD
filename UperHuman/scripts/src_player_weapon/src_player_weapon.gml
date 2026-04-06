@@ -16,4 +16,11 @@ function apply_weapon(_gun_data) {
 	}
 	
 	
+	if (variable_struct_exists(_gun_data, "range")) {
+		gun_range = _gun_data.range;
+	} else {
+	    gun_range = 500; // Tầm bắn mặc định 
+	}
+	
+	
 }

@@ -179,3 +179,34 @@ function enemy_update_sprite_direction (){
         image_angle = direction;
     }
 }
+
+// --- HỆ THỐNG TẦM NHÌN (Góc khuất) ---
+function enemy_visible(){
+	if (instance_exists(obj_player)) {
+	    // 1. Khai báo thông số mắt nhìn của Player
+	    var _view_distance = 400; // Nhìn xa tối đa 400 pixel
+	    var _fov = 100;           // Góc nhìn rộng 100 độ (Mỗi bên 50 độ)
+    
+	    // 2. Tính khoảng cách và hướng từ Player tới con quái này
+	    var _dist_to_player = point_distance(obj_player.x, obj_player.y, x, y);
+	    var _dir_to_enemy = point_direction(obj_player.x, obj_player.y, x, y);
+    
+	    // 3. Tính độ lệch góc (Góc nhìn của Player so với vị trí của quái)
+	    var _angle_diff = abs(angle_difference(obj_player.image_angle, _dir_to_enemy));
+    
+	    // 4. QUYẾT ĐỊNH HIỂN THỊ
+	    // Nếu quái nằm trong tầm xa VÀ góc lệch nhỏ hơn một nửa FOV
+	    if (_dist_to_player <= _view_distance && _angle_diff <= (_fov / 2)) {
+	        visible = true;  // Nằm trong tầm mắt -> Hiện hình
+	    } else {
+	        visible = false; // Khuất tầm mắt -> Tàng hình
+	    }
+    
+	    // 5. GIÁC QUAN THỨ 6 (Ngoại lệ Zomboid)
+	    // Nếu quái áp sát quá gần (ví dụ 60 pixel), tự động thấy dù ở sau lưng
+	    if (_dist_to_player <= 60) {
+	        visible = true; 
+	    }
+	}	
+	
+}

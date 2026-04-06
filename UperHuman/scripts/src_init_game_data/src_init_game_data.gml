@@ -5,6 +5,7 @@ function load_weapons_data() {
     global.asset_map = {
         "snd_pistol_shot_1": snd_pistol_shot_1,
         "snd_smg_shot_1": snd_smg_shot_1,
+        "snd_shotgun_shot_1": snd_shotgun_shot_1,
         "obj_ammo_1": obj_ammo_1
     };
 
@@ -24,4 +25,23 @@ function load_weapons_data() {
     } else {
         show_debug_message("LỖI: Không tìm thấy file weapons.json!");
     }
+}
+
+
+function src_item_database_init() {
+	global.item_db = {
+
+    wood: {
+        name: "Wood",
+        sprite: spr_wood,
+        max_stack: 20
+    },
+
+    axe: {
+        name: "Axe",
+        sprite: spr_axe,
+        max_stack: 1
+    }
+
+};	
 }

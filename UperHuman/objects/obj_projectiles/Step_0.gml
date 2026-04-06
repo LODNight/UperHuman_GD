@@ -44,3 +44,12 @@ if (target != noone) {
 	
 	instance_destroy()
 }
+
+
+// Tính quãng đường đạn đã bay được
+var _distance_traveled = point_distance(xstart, ystart, x, y);
+
+// Nếu bay quá tầm bắn -> Hủy viên đạn
+if (_distance_traveled >= max_range) {
+    instance_destroy();
+}

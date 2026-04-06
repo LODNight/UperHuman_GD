@@ -5,7 +5,9 @@ window_set_fullscreen(true)
 window_set_cursor(cr_none);
 
 cursor_sprite = spr_aim;
-
+// Khởi tạo biến chứa lớp sương mù
+darkness_surf = -1;
+lighting_init();
 
 // 1. Khai báo kích thước 1 ô gạch (Tile) của bạn - Thường là 16 hoặc 32
 var _cell_size = 16; 

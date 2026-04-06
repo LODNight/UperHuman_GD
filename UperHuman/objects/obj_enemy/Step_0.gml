@@ -6,3 +6,4 @@ if (hp <= 0) {
 // 2. Chạy logic
 enemy_update_sprite_direction();
 
+enemy_visible()

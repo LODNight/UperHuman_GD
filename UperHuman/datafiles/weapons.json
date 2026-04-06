@@ -5,19 +5,32 @@
         "name": "Pistol",
         "rate": 35,
         "spd": 12,
-        "damage": 10,
+        "damage": 7,
         "length": 1,
         "side_offset": 8,
-        "sound_name": "snd_pistol_shot_1"
+        "sound_name": "snd_pistol_shot_1",
+        "range": 200
     },
     {
         "id": 2,
         "name": "SMG",
         "rate": 5,
         "spd": 15,
-        "damage": 5,
+        "damage": 2,
         "length": 1,
         "side_offset": 10,
-        "sound_name": "snd_smg_shot_1"
+        "sound_name": "snd_smg_shot_1",
+        "range": 170
+    },
+    {
+        "id": 3,
+        "name": "Shotgun",
+        "rate": 55,
+        "spd": 15,
+        "damage": 9,
+        "length": 1,
+        "side_offset": 10,
+        "sound_name": "snd_shotgun_shot_1",
+        "range": 100
     }
 ]
