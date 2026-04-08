@@ -122,6 +122,35 @@ function player_shoot() {
         }
         
         shoot_cooldown = gun_fire_rate;
+		
+		// ==========================================
+        // HỆ THỐNG ĐÁNH ĐỘNG ÂM THANH (SOUND AGGRO)
+        // ==========================================
+        // Dùng vòng lặp with để duyệt qua TẤT CẢ quái vật trên bản đồ
+		
+		var _sound_x = x;
+		var _sound_y = y;
+
+        with (obj_enemy) {
+            // Chỉ đánh động nếu quái đang rảnh rỗi hoặc đang tìm kiếm lung tung
+            if (state == ENEMY_STATE.IDLE || state == ENEMY_STATE.INVESTIGATE) {
+                var _dist_to_sound = point_distance(x, y, _sound_x, _sound_y);
+                
+                if (_dist_to_sound <= other.gun_noise_radius) {
+                    state = ENEMY_STATE.INVESTIGATE;
+                    
+                    // LƯU LẠI VỊ TRÍ TIẾNG SÚNG NỔ
+                    target_x = _sound_x; 
+                    target_y = _sound_y;
+					
+					path_end();
+					path_timer = 0;
+                }
+            }
+        }
+		
+		
+		
     }
 }
 

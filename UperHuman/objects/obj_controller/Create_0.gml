@@ -1,5 +1,7 @@
 load_weapons_data()
 
+display_set_gui_size(1920, 1080);
+
 window_set_fullscreen(true)
 
 window_set_cursor(cr_none);

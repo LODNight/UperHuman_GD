@@ -11,7 +11,8 @@
         "sound_name": "snd_pistol_shot_1",
         "range": 200,
         "spawn_offset": 2,       
-        "range_variation": 20    
+        "range_variation": 20,
+        "noise_radius": 300
     },
     {
         "id": 2,
@@ -19,12 +20,13 @@
         "rate": 5,
         "spd": 15,
         "damage": 2,
-        "length": 1,
+        "length": 0,
         "side_offset": 10,
         "sound_name": "snd_smg_shot_1",
         "range": 170,
         "spawn_offset": 3,       
-        "range_variation": 30
+        "range_variation": 30,
+        "noise_radius": 200
     },
     {
         "id": 3,
@@ -32,13 +34,14 @@
         "rate": 55,
         "spd": 15,
         "damage": 9,
-        "length": 1,
+        "length": 0,
         "side_offset": 10,
         "sound_name": "snd_shotgun_shot_1",
         "range": 100,
         "bullet_count": 5,
-        "spread_angle": 45,
+        "spread_angle": 25,
         "spawn_offset": 5,       
-        "range_variation": 50
+        "range_variation": 30,
+        "noise_radius": 1200
     }
 ]

@@ -3,3 +3,7 @@ draw_self();
 
 // 2. Vẽ thanh máu lên trên
 enemy_draw_hp_bar();
+
+
+
+//draw_text(x, y - 40, string(target_x) + "," + string(target_y));

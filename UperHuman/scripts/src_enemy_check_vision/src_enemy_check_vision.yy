@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"src_ui_functions",
+  "%Name":"src_enemy_check_vision",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"src_ui_functions",
+  "name":"src_enemy_check_vision",
   "parent":{
-    "name":"Ui",
-    "path":"folders/Scripts/Ui.yy",
+    "name":"Enemy",
+    "path":"folders/Scripts/Enemy.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

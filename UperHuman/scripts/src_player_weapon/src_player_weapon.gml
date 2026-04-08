@@ -2,7 +2,6 @@ function apply_weapon(_gun_data) {
     gun_fire_rate = _gun_data.rate;
     gun_bullet_speed = _gun_data.spd;
     gun_damage = _gun_data.damage;
-    gun_length = _gun_data.length;
     
     // --- DÙNG MAPPING ĐỂ LẤY ÂM THANH ---
     var _snd_name = string_trim(_gun_data.sound_name);
@@ -10,7 +9,7 @@ function apply_weapon(_gun_data) {
     if (variable_struct_exists(global.asset_map, _snd_name)) {
         gun_sound = global.asset_map[$ _snd_name]; 
     } else {
-        show_debug_message("⚠️ LỖI: Không có âm thanh [" + _snd_name + "] trong Asset Map!");
+        show_debug_message("LỖI: Không có âm thanh [" + _snd_name + "] trong Asset Map!");
         gun_sound = snd_pistol_shot_1; 
     }
     
@@ -20,8 +19,6 @@ function apply_weapon(_gun_data) {
         gun_range = 500; 
     }
     
-    // ==========================================
-    // CHUYỂN PHẦN CHECK SHOTGUN VÀ ĐỘ LỆCH VÀO ĐÂY
     // ==========================================
     // KIỂM TRA SÚNG CÓ BẮN NHIỀU VIÊN KHÔNG
     if (variable_struct_exists(_gun_data, "bullet_count")) {
@@ -39,5 +36,12 @@ function apply_weapon(_gun_data) {
     } else {
         gun_spawn_offset = 0; 
         gun_range_variation = 0; 
+    }
+	
+	// KIỂM TRA BÁN KÍNH TIẾNG ỒN
+	if (variable_struct_exists(_gun_data, "noise_radius")) {
+        gun_noise_radius = _gun_data.noise_radius;
+    } else {
+        gun_noise_radius = 100; // Tiếng bước chân mặc định nếu không có súng
     }
 }

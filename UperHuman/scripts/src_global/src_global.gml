@@ -4,5 +4,6 @@ enum ENEMY_STATE {
 	HIT,	// Bị tấn công
 	RUN,	// Chạy
 	DEAD,	// Chết
-	ATTACK	// Tấn công
+	ATTACK,	// Tấn công
+	INVESTIGATE, // Đi tuần	
 }

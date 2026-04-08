@@ -32,6 +32,9 @@ if (target != noone) {
 	
 	// Phát âm thanh
 	//audio_play_sound(snd_hit,1,false)
+	if(target.hp  < 0){
+		target.hp = 0;
+	}
 	
 	// Đổi state sang HIT
 	target.state = ENEMY_STATE.HIT;

@@ -1,6 +1,6 @@
 
 // ===== BIẾN ĐỘNG (Dynamic Variables) =====
-state = ENEMY_STATE.WALK; 
+state = ENEMY_STATE.IDLE; 
 hp = hp_max;
 attack_timer = 0; 
 hit_timer = 0;
@@ -17,6 +17,10 @@ has_dealt_damage = false;
 path = path_add(); // Tạo một lộ trình trống
 path_timer = 0;    // Bộ đếm thời gian cập nhật GPS
 
+// Tọa độ mục tiêu khi nghe tiếng ồn
+target_x = x; 
+target_y = y;
+
 image_xscale = 0.5
 image_yscale = 0.5
 
@@ -24,6 +28,6 @@ image_yscale = 0.5
 image_speed = 1;
 image_index = 0;
 
-//spr_walk = [noone, noone, noone, noone]; 
-//spr_hit  = [noone, noone, noone, noone];
-//spr_attack  = [noone, noone, noone, noone];
+
+direction = irandom(360); 
+image_angle = direction;

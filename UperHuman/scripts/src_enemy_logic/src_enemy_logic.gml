@@ -1,15 +1,47 @@
+
 /// @function enemy_state_idle():
-/// @description Trạng thái đứng yên -> Khi gặp player thì chuyển sang WALK
 function enemy_state_idle() {
-    if (instance_exists(obj_player)) {
-        var dist = point_distance(x, y, obj_player.x, obj_player.y);
-        
-        if (dist <= aggro_range) {
-            state = ENEMY_STATE.WALK;
-        }
+    // Thỉnh thoảng quay đầu ngẫu nhiên ngó nghiêng
+    if (irandom(100) > 98) {
+        direction += random_range(-45, 45);
+    }
+    
+    // Nếu mắt quét trúng Player -> Chuyển sang rượt (WALK)
+    if (enemy_check_vision()) {
+        state = ENEMY_STATE.WALK;
     }
 }
 
+
+/// @function enemy_state_investigate():
+/// @description Nghe tiếng động, đi tới chỗ phát ra tiếng ồn để kiểm tra
+function enemy_state_investigate() {
+    if (enemy_check_vision()) {
+		path_end();
+        state = ENEMY_STATE.WALK;
+        return; // Thoát hàm này ngay lập tức
+    }
+
+    // 2. VẼ ĐƯỜNG ĐI ĐẾN CHỖ CÓ TIẾNG ỒN (target_x, target_y)
+    if (path_timer-- <= 0) {
+        path_timer = 15;
+        if (mp_grid_path(global.grid, path, x, y, target_x, target_y, true)) {
+            path_start(path, move_spd, path_action_stop, false);
+        }
+    }
+
+    // Cập nhật hướng quay mặt khi đi
+    if (x != xprevious || y != yprevious) {
+        direction = point_direction(xprevious, yprevious, x, y);
+    }
+
+    // 3. LOGIC HỦY BỎ: Đã đi tới tận nơi mà không thấy ai -> Trở về trạng thái ngủ
+    var _dist_to_target = point_distance(x, y, target_x, target_y);
+    if (_dist_to_target < 10) {
+        path_end();
+        state = ENEMY_STATE.IDLE;
+    }
+}
 
 /// @function enemy_state_walk():
 /// @description Trạng thái di chuyển theo đối tượng
@@ -23,7 +55,7 @@ function enemy_state_walk() {
             path_timer = 15;
             // Vẽ đường trên lưới
             if (mp_grid_path(global.grid, path, x, y, obj_player.x, obj_player.y, true)) {
-                path_start(path, spd, path_action_stop, false);
+                path_start(path, move_spd, path_action_stop, false);
             } else {
                 // Không tìm được đường (Player nấp trong góc kín)
                 path_end();
@@ -107,14 +139,19 @@ function enemy_apply_knockback() {
 /// @function enemy_state_hit():
 /// @description Trạng thái bị tấn công
 function enemy_state_hit() {
-	path_end();
-    // Gọi hàm knockback bạn đã viết để nó tự đẩy lùi
-    enemy_apply_knockback();
+    path_end();
+    //enemy_apply_knockback();
     
-    // Xử lý bộ đếm thời gian
     hit_timer--;
     if (hit_timer <= 0) {
-        state = ENEMY_STATE.WALK;
+        // Ép xoay mặt về phía kẻ thù vừa bắn mình
+        if (instance_exists(obj_player)) {
+            direction = point_direction(x, y, obj_player.x, obj_player.y);
+        }
+        
+        // Mặc định cho nó đi điều tra, nhưng vì nó vừa bị xoay mặt nhìn trúng Player 
+        // nên mắt nó sẽ quét trúng và chuyển sang RƯỢT ngay lập tức
+        state = ENEMY_STATE.INVESTIGATE; 
     }
 }
 
@@ -166,18 +203,10 @@ function enemy_update_sprite() {
 }
 
 
-/// @description Xử lý hành vi theo từng trạng thái
-function enemy_update_sprite_direction (){
-	// 1. Cập nhật Sprite
-    //if (state == ENEMY_STATE.HIT) sprite_index = spr_hit;
-    //else if (state == ENEMY_STATE.ATTACK) sprite_index = spr_attack;
-    //else sprite_index = spr_walk;
-
-    // 2. Xoay hình ảnh theo hướng di chuyển
-    // (Lưu ý: Sprite mặc định của bạn phải được vẽ hướng mặt về bên Phải)
-    if (speed > 0 || path_index != -1) {
-        image_angle = direction;
-    }
+/// @function enemy_update_sprite_direction()
+function enemy_update_sprite_direction() {
+    // Ép hình ảnh luôn xoay theo hướng nhìn hiện tại (Bỏ cái if check speed đi)
+    image_angle = direction;
 }
 
 // --- HỆ THỐNG TẦM NHÌN (Góc khuất) ---
@@ -209,4 +238,32 @@ function enemy_visible(){
 	    }
 	}	
 	
+}
+
+
+/// @function check_los_tilemap(x1, y1, x2, y2)
+/// @description Bắn tia laser để xem có bị chặn bởi Tilemap tường không
+function check_los_tilemap(_x1, _y1, _x2, _y2) {
+    var _lay_id = layer_get_id("Tiles_Collision");
+    
+    // Bảo hiểm 1: Kiểm tra xem Layer có tồn tại không
+    if (_lay_id == -1) return false; 
+    
+    var _map_id = layer_tilemap_get_id(_lay_id);
+    
+    // Bảo hiểm 2: Kiểm tra xem Tilemap có tồn tại không
+    if (_map_id == -1) return false;
+
+    var _dist = point_distance(_x1, _y1, _x2, _y2);
+    var _dir = point_direction(_x1, _y1, _x2, _y2);
+
+    for (var i = 0; i < _dist; i += 8) {
+        var _check_x = _x1 + lengthdir_x(i, _dir);
+        var _check_y = _y1 + lengthdir_y(i, _dir);
+
+        if (tilemap_get_at_pixel(_map_id, _check_x, _check_y) > 0) {
+            return true; // Bị chặn!
+        }
+    }
+    return false; // Thông thoáng!
 }
