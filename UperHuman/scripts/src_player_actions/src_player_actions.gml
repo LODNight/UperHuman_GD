@@ -49,8 +49,10 @@ function player_movement() {
 /// @description: Hàm bắn súng
 function player_shoot() {
     if (shoot_cooldown > 0) shoot_cooldown--;
+	
 
     if (mouse_check_button(mb_left) && shoot_cooldown <= 0) {
+		global.noise_level += 1;
         
         // 1. Khoảng cách đẩy ra phía trước (Chiều dài súng)
         var _forward_dist = gun_length; 
@@ -143,19 +145,19 @@ function player_shoot() {
                 var _dist_to_sound = point_distance(x, y, _sound_x, _sound_y);
                 
                 if (_dist_to_sound <= other.gun_noise_radius) {
-                    state = ENEMY_STATE.INVESTIGATE;
-                    
-                    // LƯU LẠI VỊ TRÍ TIẾNG SÚNG NỔ
-                    target_x = _sound_x; 
-                    target_y = _sound_y;
-					
-					path_end();
-					path_timer = 0;
+                    aggro_active = true;
+			        aggro_timer = 180; // nhớ 3 giây
+
+			        aggro_target_x = other.x;
+			        aggro_target_y = other.y;
+
+			        state = ENEMY_STATE.INVESTIGATE;
+
+			        path_end();
+			        path_timer = 0;
                 }
             }
         }
-		
-		
 		
     }
 }
@@ -167,7 +169,6 @@ function player_switch_weapon() {
             current_weapon = i;
             var _gun_data = global.weapons[current_weapon];
             
-            // Chỉ cần gọi 1 hàm duy nhất này là tự động cập nhật A-Z!
             apply_weapon(_gun_data);
             
             break; 

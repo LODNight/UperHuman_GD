@@ -33,3 +33,9 @@ switch (state) {
 
 // 3. Update hướng
 enemy_update_sprite_direction();
+
+// Hiển thị Enemy
+enemy_visible()
+
+// Lan tín hiệu cho các con xung quanh
+enmey_horde_propagation()

@@ -31,3 +31,17 @@ image_index = 0;
 
 direction = irandom(360); 
 image_angle = direction;
+
+
+// ===== HORDE SYSTEM =====
+aggro_target_x = x;
+aggro_target_y = y;
+
+aggro_active = false;
+aggro_timer = 0;
+
+horde_radius = 120;     // bán kính gọi đồng đội
+horde_delay = 10;       // delay giữa các lần gọi
+horde_timer = 0;
+
+attack_buffer = 1; // khoảng đứng ngoài player

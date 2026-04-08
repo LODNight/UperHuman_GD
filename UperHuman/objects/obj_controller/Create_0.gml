@@ -5,6 +5,7 @@ display_set_gui_size(1920, 1080);
 window_set_fullscreen(true)
 
 window_set_cursor(cr_none);
+global.noise_level = 0;
 
 cursor_sprite = spr_aim;
 // Khởi tạo biến chứa lớp sương mù

@@ -31,9 +31,12 @@ function enemy_state_investigate() {
     }
 
     // Cập nhật hướng quay mặt khi đi
-    if (x != xprevious || y != yprevious) {
-        direction = point_direction(xprevious, yprevious, x, y);
-    }
+    var _dx = x - xprevious;
+	var _dy = y - yprevious;
+
+	if (_dx != 0 || _dy != 0) {
+	    direction = point_direction(0, 0, _dx, _dy);
+	}
 
     // 3. LOGIC HỦY BỎ: Đã đi tới tận nơi mà không thấy ai -> Trở về trạng thái ngủ
     var _dist_to_target = point_distance(x, y, target_x, target_y);
@@ -46,56 +49,95 @@ function enemy_state_investigate() {
 /// @function enemy_state_walk():
 /// @description Trạng thái di chuyển theo đối tượng
 function enemy_state_walk() {
-   if (instance_exists(obj_player)) {
-        // Khoảng cách đường thẳng (vẫn cần để tính tầm cắn)
-        var straight_dist = point_distance(x, y, obj_player.x, obj_player.y);
 
-        // 1. CẬP NHẬT GPS TÌM ĐƯỜNG TRƯỚC TIÊN
-        if (path_timer-- <= 0) {
-            path_timer = 15;
-            // Vẽ đường trên lưới
-            if (mp_grid_path(global.grid, path, x, y, obj_player.x, obj_player.y, true)) {
-                path_start(path, move_spd, path_action_stop, false);
-            } else {
-                // Không tìm được đường (Player nấp trong góc kín)
-                path_end();
-            }
-        }
-
-        // 2. TÍNH QUÃNG ĐƯỜNG THỰC TẾ (Độ dài của đoạn GPS vừa vẽ)
-        var actual_dist = path_get_length(path);
-
-
-        // 3. LOGIC MẤT DẤU THÔNG MINH
-        if (actual_dist > chase_range || (actual_dist == 0 && straight_dist > chase_range)) {
-            path_end();
-            state = ENEMY_STATE.IDLE;
-        }
-        // 4. LOGIC TẤN CÔNG
-        else if (straight_dist <= attack_range && attack_timer <= 0) {
-            path_end();
-            state = ENEMY_STATE.ATTACK;
-            image_index = 0;          
-            has_dealt_damage = false; 
-        }
-        // 5. CẬP NHẬT HƯỚNG QUAY MẶT KHI ĐANG CHẠY
-        else {
-            if (x != xprevious || y != yprevious) {
-                direction = point_direction(xprevious, yprevious, x, y);
-            }
-        }
-    } else {
+    if (!instance_exists(obj_player)) {
         path_end();
         state = ENEMY_STATE.IDLE;
+        return;
     }
-    
-    // Giảm thời gian chờ hồi chiêu
-    if (attack_timer > 0) {
-        attack_timer--;
+
+    var _dist = point_distance(x, y, obj_player.x, obj_player.y);
+
+    // =========================
+    // PATH (xa thì dùng path)
+    // =========================
+    if (_dist > 150) {
+
+        if (path_timer-- <= 0) {
+            path_timer = 20;
+
+            if (mp_grid_path(global.grid, path, x, y, obj_player.x, obj_player.y, true)) {
+                path_start(path, move_spd, path_action_stop, false);
+            }
+        }
+    }
+    else {
+        // =========================
+        // GẦN → STEERING REAL
+        // =========================
+        path_end();
+
+        var _vel = enemy_calculate_velocity();
+
+		// MOVE CÓ COLLISION
+		var _real_vel = enemy_move_with_collision(_vel[0], _vel[1]);
+
+		// QUAY THEO HƯỚNG DI CHUYỂN THỰC
+		if (_real_vel[0] != 0 || _real_vel[1] != 0) {
+		    var _move_dir = point_direction(0, 0, _real_vel[0], _real_vel[1]);
+
+		    direction = lerp(direction, _move_dir, 0.25);
+		    direction += random_range(-2, 2);
+		}
+
+        // =========================
+        // QUAY THEO HƯỚNG DI CHUYỂN
+        // =========================
+        if (_vel[0] != 0 || _vel[1] != 0) {
+            var _move_dir = point_direction(0, 0, _vel[0], _vel[1]);
+
+            direction = lerp(direction, _move_dir, 0.25);
+			direction += random_range(-2, 2);
+        }
+    }
+
+    // =========================
+    // ATTACK
+    // =========================
+    if (_dist <= attack_range && attack_timer <= 0) {
+        state = ENEMY_STATE.ATTACK;
+        image_index = 0;
+        has_dealt_damage = false;
+        return;
+    }
+
+    // =========================
+    // LOSE TARGET
+    // =========================
+    if (_dist > chase_range) {
+        state = ENEMY_STATE.IDLE;
+        return;
+    }
+
+    // =========================
+    // HORDE SIGNAL
+    // =========================
+    aggro_active = true;
+    aggro_timer = 300;
+
+    aggro_target_x = obj_player.x;
+    aggro_target_y = obj_player.y;
+
+    with (obj_enemy) {
+        if (point_distance(x, y, other.x, other.y) < 200) {
+            aggro_active = true;
+            aggro_target_x = other.aggro_target_x;
+            aggro_target_y = other.aggro_target_y;
+        }
     }
 }
 
-/// @function enemy_apply_knockback():
+
 /// @description Áp dụng hiệu ứng đẩy lùi
 function enemy_apply_knockback() {
     if (knockback_spd > 0) {
@@ -136,7 +178,6 @@ function enemy_apply_knockback() {
 }
 
 
-/// @function enemy_state_hit():
 /// @description Trạng thái bị tấn công
 function enemy_state_hit() {
     path_end();
@@ -155,11 +196,11 @@ function enemy_state_hit() {
     }
 }
 
-/// @function enemy_state_attack():
+
 /// @description Trạng thái tấn công
 function enemy_state_attack() {
     
-	if(image_index >= image_index - 1){
+	if (image_index >= image_number - 1) {
 	    // SAU KHI ĐÁNH XONG: Ép nó quay về trạng thái đi bộ
 	    state = ENEMY_STATE.WALK
 	    // Đặt lại thời gian hồi chiêu (ví dụ 60 frame = 1 giây sau mới được cắn tiếp)
@@ -167,12 +208,11 @@ function enemy_state_attack() {
 	}
 }
 
-/// @function enemy_state_attack():
+
 /// @description Trạng thái tấn công
 function enemy_state_dead() {
     instance_destroy();
 }
-
 
 
 /// @description Xử lý hành vi theo từng trạng thái
@@ -203,13 +243,13 @@ function enemy_update_sprite() {
 }
 
 
-/// @function enemy_update_sprite_direction()
+/// @description Cập nhật hình ảnh sprite theo hướng di chuyển
 function enemy_update_sprite_direction() {
     // Ép hình ảnh luôn xoay theo hướng nhìn hiện tại (Bỏ cái if check speed đi)
     image_angle = direction;
 }
 
-// --- HỆ THỐNG TẦM NHÌN (Góc khuất) ---
+/// @description Hệ thống tầm nhìn cho Enemy
 function enemy_visible(){
 	if (instance_exists(obj_player)) {
 	    // 1. Khai báo thông số mắt nhìn của Player
@@ -241,7 +281,6 @@ function enemy_visible(){
 }
 
 
-/// @function check_los_tilemap(x1, y1, x2, y2)
 /// @description Bắn tia laser để xem có bị chặn bởi Tilemap tường không
 function check_los_tilemap(_x1, _y1, _x2, _y2) {
     var _lay_id = layer_get_id("Tiles_Collision");
@@ -266,4 +305,218 @@ function check_los_tilemap(_x1, _y1, _x2, _y2) {
         }
     }
     return false; // Thông thoáng!
+}
+
+/// @description Kiêu gọi những con gần nhau
+function enmey_horde_propagation(){
+	if (aggro_active) {
+
+	    aggro_timer--;
+
+	    if (aggro_timer <= 0) {
+	        aggro_active = false;
+	    }
+
+	    // Gọi đồng đội xung quanh
+	    horde_timer--;
+
+	    if (horde_timer <= 0) {
+
+	        horde_timer = horde_delay;
+
+	        with (obj_enemy) {
+
+	            if (!aggro_active) {
+
+	                var _dist = point_distance(x, y, other.x, other.y);
+
+	                if (_dist <= other.horde_radius) {
+
+	                    aggro_active = true;
+	                    aggro_timer = 120;
+
+	                    aggro_target_x = other.aggro_target_x;
+	                    aggro_target_y = other.aggro_target_y;
+
+	                    state = ENEMY_STATE.INVESTIGATE;
+
+	                    path_end();
+	                    path_timer = 0;
+	                }
+	            }
+	        }
+	    }
+	}	
+}
+
+/// @description Đẩy enemy ra khỏi nhau (anti-stack)
+function enemy_separation() {
+
+    var _push_x = 0;
+    var _push_y = 0;
+    var _count = 0;
+
+    var _min_dist = 20;   // khoảng cách tối thiểu (hitbox)
+    var _force = 0.6;     // lực đẩy
+
+    with (obj_enemy) {
+        if (id != other.id) {
+
+            var _dist = point_distance(x, y, other.x, other.y);
+
+            if (_dist > 0 && _dist < _min_dist) {
+
+                // Hướng đẩy: từ enemy kia -> về mình
+                var _dir = point_direction(x, y, other.x, other.y);
+
+                // Scale lực theo khoảng cách (càng gần càng mạnh)
+                var _strength = (_min_dist - _dist) / _min_dist;
+
+                _push_x += lengthdir_x(_strength, _dir);
+                _push_y += lengthdir_y(_strength, _dir);
+
+                _count++;
+            }
+        }
+    }
+
+    if (_count > 0) {
+        _push_x /= _count;
+        _push_y /= _count;
+
+        x += _push_x * _force;
+        y += _push_y * _force;
+    }
+}
+
+
+/// @description Steering
+function enemy_calculate_velocity() {
+
+    var _vx = 0;
+    var _vy = 0;
+
+    var _dist = point_distance(x, y, obj_player.x, obj_player.y);
+    var _dir = point_direction(x, y, obj_player.x, obj_player.y);
+
+    var _target_dist = attack_range - attack_buffer;
+
+    // =========================
+    // SEEK PLAYER (đuổi theo)
+    // =========================
+    if (_dist > _target_dist) {
+        _vx += lengthdir_x(1, _dir);
+        _vy += lengthdir_y(1, _dir);
+    }
+    else if (_dist < _target_dist - 4) {
+        var _back = _dir + 180;
+        _vx += lengthdir_x(0.6, _back);
+        _vy += lengthdir_y(0.6, _back);
+    }
+
+    // =========================
+    // SEPARATION (tránh chồng)
+    // =========================
+    with (obj_enemy) {
+        if (id != other.id) {
+
+            var _d = point_distance(x, y, other.x, other.y);
+
+            if (_d > 0 && _d < 20) {
+                var _dir2 = point_direction(x, y, other.x, other.y);
+
+                var _force = (20 - _d) / 20;
+
+                _vx += lengthdir_x(-_force * 1.5, _dir2);
+                _vy += lengthdir_y(-_force * 1.5, _dir2);
+            }
+        }
+    }
+
+    // =========================
+    // COHESION (tụ bầy nhẹ)
+    // =========================
+    var _near = instance_nearest(x, y, obj_enemy);
+
+    if (_near != id) {
+        var _d = point_distance(x, y, _near.x, _near.y);
+
+        if (_d > 40 && _d < 120) {
+            var _dir3 = point_direction(x, y, _near.x, _near.y);
+
+            _vx += lengthdir_x(0.2, _dir3);
+            _vy += lengthdir_y(0.2, _dir3);
+        }
+    }
+
+    // =========================
+    // NORMALIZE (giữ tốc độ ổn định)
+    // =========================
+    var _len = point_distance(0, 0, _vx, _vy);
+
+    if (_len > 0) {
+        _vx = (_vx / _len) * move_spd;
+        _vy = (_vy / _len) * move_spd;
+    }
+
+    return [_vx, _vy];
+}
+
+/// @description Kiểm tra va chạm
+function enemy_move_with_collision(_vx, _vy) {
+
+    var _lay_id = layer_get_id("Tiles_Collision");
+    var _map_id = layer_tilemap_get_id(_lay_id);
+
+    var _blocked_x = false;
+    var _blocked_y = false;
+
+    // =========================
+    // MOVE X (CHECK HITBOX)
+    // =========================
+    if (_vx != 0) {
+
+        var _side = (_vx > 0) ? bbox_right : bbox_left;
+        var _next = _side + _vx;
+
+        if (tilemap_get_at_pixel(_map_id, _next, bbox_top) ||
+            tilemap_get_at_pixel(_map_id, _next, bbox_bottom)) {
+
+            _blocked_x = true;
+        }
+        else {
+            x += _vx;
+        }
+    }
+
+    // =========================
+    // MOVE Y (CHECK HITBOX)
+    // =========================
+    if (_vy != 0) {
+
+        var _side = (_vy > 0) ? bbox_bottom : bbox_top;
+        var _next = _side + _vy;
+
+        if (tilemap_get_at_pixel(_map_id, bbox_left, _next) ||
+            tilemap_get_at_pixel(_map_id, bbox_right, _next)) {
+
+            _blocked_y = true;
+        }
+        else {
+            y += _vy;
+        }
+    }
+
+    // =========================
+    // SLIDE (CẠ TƯỜNG)
+    // =========================
+    if (_blocked_x && !_blocked_y) {
+        y += _vy;
+    }
+
+    if (_blocked_y && !_blocked_x) {
+        x += _vx;
+    }
+
+    return [_vx, _vy];
 }
