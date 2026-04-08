@@ -42,7 +42,7 @@ function draw_weapon_hotbar() {
     // Tọa độ X bắt đầu vẽ (Lấy giữa màn hình trừ đi một nửa tổng chiều dài)
     var _start_x = (_gui_w / 2) - (_total_width / 2);
     // Tọa độ Y (Nằm sát dưới đáy, cách lên 20 pixel)
-    var _y = _gui_h - _slot_size - 20; 
+    var _y = _gui_h - _slot_size - 60; 
 
     // 4. VÒNG LẶP VẼ TỪNG Ô
     for (var i = 1; i <= _weapon_count; i++) {

@@ -13,7 +13,7 @@ function enemy_draw_hp_bar() {
     var _bar_width = 30;
     var _bar_height = 4;
     var _xx = x - (_bar_width / 2);
-    var _yy = y - 25; // Nằm trên đầu quái
+    var _yy = y + 10; // Nằm trên đầu quái
     
     // Vẽ nền đen
     draw_set_color(c_black);

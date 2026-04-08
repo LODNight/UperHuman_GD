@@ -42,6 +42,7 @@ function player_movement() {
         _vspd = 0;
     }
     y += _vspd;
+	
 }
 
 
@@ -69,6 +70,10 @@ function player_shoot() {
         // Cộng dồn vị trí gốc của Player + Độ vươn tới + Độ lệch ngang
         var _spawn_x = x + _x_forward + _x_side;
         var _spawn_y = y + _y_forward + _y_side;
+		
+		if (tilemap_get_at_pixel(collision_tilemap, _spawn_x, _spawn_y) != 0) {
+			return; // ❌ Không cho bắn
+		}
         
 		if (gun_sound != -1) {
 		    audio_play_sound(gun_sound, 1, false);
@@ -107,6 +112,7 @@ function player_shoot() {
             // ==========================================
             // TẠO ĐẠN Ở VỊ TRÍ VÀ TẦM BẮN ĐÃ ĐƯỢC "BIẾN THIÊN"
             // ==========================================
+			
             var _bullet = instance_create_layer(_final_spawn_x, _final_spawn_y, "Instances_Projectiles", obj_ammo_1);
             
             // Gán thông số
