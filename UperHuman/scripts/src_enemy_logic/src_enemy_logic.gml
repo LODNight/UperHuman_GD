@@ -6,47 +6,63 @@ function enemy_state_idle() {
         direction += random_range(-45, 45);
     }
     
-    // Nếu mắt quét trúng Player -> Chuyển sang rượt (WALK)
-    if (enemy_check_vision()) {
-        state = ENEMY_STATE.WALK;
-    }
+   if (investigate_timer > 0) {
+	    investigate_timer--;
+	    direction += random_range(-3, 3);
+	    return;
+	}
+
+	// Sau khi hết investigate mới check player
+	if (enemy_check_vision()) {
+	    state = ENEMY_STATE.WALK;
+	}
 }
 
-
-/// @function enemy_state_investigate():
 /// @description Nghe tiếng động, đi tới chỗ phát ra tiếng ồn để kiểm tra
 function enemy_state_investigate() {
+
+    // Nếu thấy player → chuyển qua chase ngay
     if (enemy_check_vision()) {
-		path_end();
+        path_end();
         state = ENEMY_STATE.WALK;
-        return; // Thoát hàm này ngay lập tức
+        return;
     }
 
-    // 2. VẼ ĐƯỜNG ĐI ĐẾN CHỖ CÓ TIẾNG ỒN (target_x, target_y)
+    // =========================
+    // PATH ĐẾN ĐIỂM NGHI NGỜ
+    // =========================
     if (path_timer-- <= 0) {
-        path_timer = 15;
+        path_timer = 10;
+
         if (mp_grid_path(global.grid, path, x, y, target_x, target_y, true)) {
-            path_start(path, move_spd, path_action_stop, false);
+            path_start(path, move_spd * 0.8, path_action_stop, false);
         }
     }
 
-    // Cập nhật hướng quay mặt khi đi
-    var _dx = x - xprevious;
-	var _dy = y - yprevious;
+    // =========================
+    // QUAY MẶT THEO DI CHUYỂN
+    // =========================
+    if (path_position > 0) {
 
-	if (_dx != 0 || _dy != 0) {
-	    direction = point_direction(0, 0, _dx, _dy);
-	}
+        var _dir = point_direction(x, y, target_x, target_y);
+		direction = lerp(direction, _dir, 0.15);
+    }
 
-    // 3. LOGIC HỦY BỎ: Đã đi tới tận nơi mà không thấy ai -> Trở về trạng thái ngủ
-    var _dist_to_target = point_distance(x, y, target_x, target_y);
-    if (_dist_to_target < 10) {
+    // =========================
+    // ĐẾN NƠI → CHECK XUNG QUANH
+    // =========================
+    var _dist = point_distance(x, y, target_x, target_y);
+
+    if (_dist < 12) {
+
         path_end();
+
+        // đứng check 1 chút cho real
+        investigate_timer = 30;
         state = ENEMY_STATE.IDLE;
     }
 }
 
-/// @function enemy_state_walk():
 /// @description Trạng thái di chuyển theo đối tượng
 function enemy_state_walk() {
 
@@ -73,32 +89,22 @@ function enemy_state_walk() {
     }
     else {
         // =========================
-        // GẦN → STEERING REAL
+        // STEERING REAL
         // =========================
         path_end();
 
-        var _vel = enemy_calculate_velocity();
+		var _vel = enemy_calculate_velocity();
 
-		// MOVE CÓ COLLISION
+		// move thật
 		var _real_vel = enemy_move_with_collision(_vel[0], _vel[1]);
 
-		// QUAY THEO HƯỚNG DI CHUYỂN THỰC
+		// CHỈ QUAY THEO REAL VEL (KHÔNG DÙNG _vel NỮA)
 		if (_real_vel[0] != 0 || _real_vel[1] != 0) {
 		    var _move_dir = point_direction(0, 0, _real_vel[0], _real_vel[1]);
 
-		    direction = lerp(direction, _move_dir, 0.25);
+		    direction = lerp(direction, _move_dir, 0.2);
 		    direction += random_range(-2, 2);
 		}
-
-        // =========================
-        // QUAY THEO HƯỚNG DI CHUYỂN
-        // =========================
-        if (_vel[0] != 0 || _vel[1] != 0) {
-            var _move_dir = point_direction(0, 0, _vel[0], _vel[1]);
-
-            direction = lerp(direction, _move_dir, 0.25);
-			direction += random_range(-2, 2);
-        }
     }
 
     // =========================
@@ -136,7 +142,6 @@ function enemy_state_walk() {
         }
     }
 }
-
 
 /// @description Áp dụng hiệu ứng đẩy lùi
 function enemy_apply_knockback() {
@@ -177,7 +182,6 @@ function enemy_apply_knockback() {
     }
 }
 
-
 /// @description Trạng thái bị tấn công
 function enemy_state_hit() {
     path_end();
@@ -196,7 +200,6 @@ function enemy_state_hit() {
     }
 }
 
-
 /// @description Trạng thái tấn công
 function enemy_state_attack() {
     
@@ -208,12 +211,10 @@ function enemy_state_attack() {
 	}
 }
 
-
 /// @description Trạng thái tấn công
 function enemy_state_dead() {
     instance_destroy();
 }
-
 
 /// @description Xử lý hành vi theo từng trạng thái
 function enemy_update_sprite() {
@@ -241,7 +242,6 @@ function enemy_update_sprite() {
         image_index = 0;
     }
 }
-
 
 /// @description Cập nhật hình ảnh sprite theo hướng di chuyển
 function enemy_update_sprite_direction() {
@@ -279,7 +279,6 @@ function enemy_visible(){
 	}	
 	
 }
-
 
 /// @description Bắn tia laser để xem có bị chặn bởi Tilemap tường không
 function check_los_tilemap(_x1, _y1, _x2, _y2) {
@@ -389,7 +388,6 @@ function enemy_separation() {
     }
 }
 
-
 /// @description Steering
 function enemy_calculate_velocity() {
 
@@ -471,51 +469,48 @@ function enemy_move_with_collision(_vx, _vy) {
     var _blocked_x = false;
     var _blocked_y = false;
 
-    // =========================
-    // MOVE X (CHECK HITBOX)
-    // =========================
-    if (_vx != 0) {
+    var _step = 4; // chia nhỏ bước để không xuyên
 
-        var _side = (_vx > 0) ? bbox_right : bbox_left;
-        var _next = _side + _vx;
+    // =========================
+    // MOVE X (chia nhỏ bước)
+    // =========================
+    var _move_x = _vx;
 
-        if (tilemap_get_at_pixel(_map_id, _next, bbox_top) ||
-            tilemap_get_at_pixel(_map_id, _next, bbox_bottom)) {
+    while (abs(_move_x) > 0) {
+
+        var _dx = clamp(_move_x, -_step, _step);
+        var _side = (_dx > 0) ? bbox_right : bbox_left;
+
+        if (tilemap_get_at_pixel(_map_id, _side + _dx, bbox_top) ||
+            tilemap_get_at_pixel(_map_id, _side + _dx, bbox_bottom)) {
 
             _blocked_x = true;
+            break;
         }
-        else {
-            x += _vx;
-        }
+
+        x += _dx;
+        _move_x -= _dx;
     }
 
     // =========================
-    // MOVE Y (CHECK HITBOX)
+    // MOVE Y (chia nhỏ bước)
     // =========================
-    if (_vy != 0) {
+    var _move_y = _vy;
 
-        var _side = (_vy > 0) ? bbox_bottom : bbox_top;
-        var _next = _side + _vy;
+    while (abs(_move_y) > 0) {
 
-        if (tilemap_get_at_pixel(_map_id, bbox_left, _next) ||
-            tilemap_get_at_pixel(_map_id, bbox_right, _next)) {
+        var _dy = clamp(_move_y, -_step, _step);
+        var _side = (_dy > 0) ? bbox_bottom : bbox_top;
+
+        if (tilemap_get_at_pixel(_map_id, bbox_left, _side + _dy) ||
+            tilemap_get_at_pixel(_map_id, bbox_right, _side + _dy)) {
 
             _blocked_y = true;
+            break;
         }
-        else {
-            y += _vy;
-        }
-    }
 
-    // =========================
-    // SLIDE (CẠ TƯỜNG)
-    // =========================
-    if (_blocked_x && !_blocked_y) {
-        y += _vy;
-    }
-
-    if (_blocked_y && !_blocked_x) {
-        x += _vx;
+        y += _dy;
+        _move_y -= _dy;
     }
 
     return [_vx, _vy];

@@ -28,10 +28,8 @@ image_yscale = 0.5
 image_speed = 1;
 image_index = 0;
 
-
 direction = irandom(360); 
 image_angle = direction;
-
 
 // ===== HORDE SYSTEM =====
 aggro_target_x = x;
@@ -45,3 +43,5 @@ horde_delay = 10;       // delay giữa các lần gọi
 horde_timer = 0;
 
 attack_buffer = 1; // khoảng đứng ngoài player
+
+investigate_timer = 0;
