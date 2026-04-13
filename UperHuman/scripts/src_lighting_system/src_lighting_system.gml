@@ -30,7 +30,7 @@ function lighting_draw() {
     surface_set_target(darkness_surf);
     
     // Phủ màu đen (0.95 là tối thui, 0.25 là mờ mờ để test)
-    draw_clear_alpha(c_black, 0.25); 
+    draw_clear_alpha(c_black, 0.65); 
 
     // 4. Chuyển sang chế độ Cắt Lỗ
     gpu_set_blendmode(bm_subtract);

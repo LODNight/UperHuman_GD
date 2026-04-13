@@ -1,5 +1,5 @@
 // ===== GIỚI HẠN =====
-max_enemies = 30;
+max_enemies = 100;
 
 // ===== TIMER =====
 spawn_rate = 120;
