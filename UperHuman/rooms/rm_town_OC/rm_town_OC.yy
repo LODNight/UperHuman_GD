@@ -1,16 +1,16 @@
 {
   "$GMRoom":"v1",
-  "%Name":"rm_Own_City",
+  "%Name":"rm_town_OC",
   "creationCodeFile":"",
   "inheritCode":false,
   "inheritCreationOrder":false,
   "inheritLayers":false,
   "instanceCreationOrder":[
-    {"name":"inst_5496E0F3_1","path":"rooms/rm_Own_City/rm_Own_City.yy",},
-    {"name":"inst_52174D02_1","path":"rooms/rm_Own_City/rm_Own_City.yy",},
-    {"name":"inst_4536F4D7_1","path":"rooms/rm_Own_City/rm_Own_City.yy",},
-    {"name":"inst_776EBBAB1","path":"rooms/rm_Own_City/rm_Own_City.yy",},
-    {"name":"inst_64A7F6CA1","path":"rooms/rm_Own_City/rm_Own_City.yy",},
+    {"name":"inst_5496E0F3_1","path":"rooms/rm_town_OC/rm_town_OC.yy",},
+    {"name":"inst_52174D02_1","path":"rooms/rm_town_OC/rm_town_OC.yy",},
+    {"name":"inst_4536F4D7_1","path":"rooms/rm_town_OC/rm_town_OC.yy",},
+    {"name":"inst_776EBBAB1","path":"rooms/rm_town_OC/rm_town_OC.yy",},
+    {"name":"inst_64A7F6CA1","path":"rooms/rm_town_OC/rm_town_OC.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -240,10 +240,10 @@
         ],"TileDataFormat":1,},"tilesetId":{"name":"tl_brown","path":"tilesets/tl_brown/tl_brown.yy",},"userdefinedDepth":false,"visible":true,"x":0,"y":0,},
     {"$GMRBackgroundLayer":"","%Name":"Background","animationFPS":15.0,"animationSpeedType":0,"colour":4283190348,"depth":600,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"hspeed":0.0,"htiled":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Background","properties":[],"resourceType":"GMRBackgroundLayer","resourceVersion":"2.0","spriteId":null,"stretch":true,"userdefinedAnimFPS":false,"userdefinedDepth":false,"visible":true,"vspeed":0.0,"vtiled":false,"x":0,"y":0,},
   ],
-  "name":"rm_Own_City",
+  "name":"rm_town_OC",
   "parent":{
-    "name":"Level 1",
-    "path":"folders/_Rooms/Level 1.yy",
+    "name":"Own_City",
+    "path":"folders/_Rooms/Own_City.yy",
   },
   "parentRoom":null,
   "physicsSettings":{
