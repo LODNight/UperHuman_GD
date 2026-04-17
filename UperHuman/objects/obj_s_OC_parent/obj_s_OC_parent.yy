@@ -1,16 +1,16 @@
 {
   "$GMObject":"",
-  "%Name":"obj_spawner",
+  "%Name":"obj_s_OC_parent",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_spawner",
+  "name":"obj_s_OC_parent",
   "overriddenProperties":[],
   "parent":{
-    "name":"_Controller",
-    "path":"folders/Objects/_Controller.yy",
+    "name":"Spawner",
+    "path":"folders/Objects/_Controller/Spawner.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -27,16 +27,13 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
-    {"$GMObjectProperty":"v2","%Name":"max_enemies","filters":[],"listItems":[],"multiselect":false,"name":"max_enemies","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"8","varType":0,},
-    {"$GMObjectProperty":"v2","%Name":"spawn_radius","filters":[],"listItems":[],"multiselect":false,"name":"spawn_radius","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"64","varType":0,},
+    {"$GMObjectProperty":"v2","%Name":"max_enemies","filters":[],"listItems":[],"multiselect":false,"name":"max_enemies","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"5","varType":0,},
+    {"$GMObjectProperty":"v2","%Name":"spawn_radius","filters":[],"listItems":[],"multiselect":false,"name":"spawn_radius","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"200","varType":0,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"spr_spawn",
-    "path":"sprites/spr_spawn/spr_spawn.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

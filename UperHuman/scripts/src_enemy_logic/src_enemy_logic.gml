@@ -249,35 +249,50 @@ function enemy_update_sprite_direction() {
     image_angle = direction;
 }
 
-/// @description Hệ thống tầm nhìn cho Enemy
-function enemy_visible(){
-	if (instance_exists(obj_player)) {
-	    // 1. Khai báo thông số mắt nhìn của Player
-	    var _view_distance = 400; // Nhìn xa tối đa 400 pixel
-	    var _fov = 100;           // Góc nhìn rộng 100 độ (Mỗi bên 50 độ)
-    
-	    // 2. Tính khoảng cách và hướng từ Player tới con quái này
-	    var _dist_to_player = point_distance(obj_player.x, obj_player.y, x, y);
-	    var _dir_to_enemy = point_direction(obj_player.x, obj_player.y, x, y);
-    
-	    // 3. Tính độ lệch góc (Góc nhìn của Player so với vị trí của quái)
-	    var _angle_diff = abs(angle_difference(obj_player.image_angle, _dir_to_enemy));
-    
-	    // 4. QUYẾT ĐỊNH HIỂN THỊ
-	    // Nếu quái nằm trong tầm xa VÀ góc lệch nhỏ hơn một nửa FOV
-	    if (_dist_to_player <= _view_distance && _angle_diff <= (_fov / 2)) {
-	        visible = true;  // Nằm trong tầm mắt -> Hiện hình
-	    } else {
-	        visible = false; // Khuất tầm mắt -> Tàng hình
-	    }
-    
-	    // 5. GIÁC QUAN THỨ 6 (Ngoại lệ Zomboid)
-	    // Nếu quái áp sát quá gần (ví dụ 60 pixel), tự động thấy dù ở sau lưng
-	    if (_dist_to_player <= 60) {
-	        visible = true; 
-	    }
-	}	
-	
+
+/// @description Hệ thống tầm nhìn cho Enemy (Tilemap Version)
+function enemy_visible() {
+    if (instance_exists(obj_player)) {
+        var _view_distance = 400; 
+        var _fov = 100;           
+        
+        var _dist_to_player = point_distance(obj_player.x, obj_player.y, x, y);
+        var _dir_to_enemy = point_direction(obj_player.x, obj_player.y, x, y);
+        var _angle_diff = abs(angle_difference(obj_player.image_angle, _dir_to_enemy));
+        
+        // --- TỰ CHẾ COLLISION LINE BẰNG TILEMAP ---
+        var _is_blocked = false;
+        var _check_step = 16; // Bước nhảy để check 
+        
+        // Chỉ cần check Line of Sight nếu quái nằm trong bán kính nhìn thấy
+        if (_dist_to_player <= _view_distance) {
+            // Cho một điểm chạy từ vị trí Player đến vị trí quái vật
+            for (var d = 0; d <= _dist_to_player; d += _check_step) {
+                var _check_x = obj_player.x + lengthdir_x(d, _dir_to_enemy);
+                var _check_y = obj_player.y + lengthdir_y(d, _dir_to_enemy);
+                
+                // Nếu điểm đang check đạp trúng Tile tường -> Bị khuất
+                if (tilemap_get_at_pixel(global.tilemap_wall_id, _check_x, _check_y) != 0) {
+                    _is_blocked = true;
+                    break; 
+                }
+            }
+        } else {
+            _is_blocked = true; // Quá xa thì coi như không thấy luôn cho nhẹ
+        }
+        
+        // QUYẾT ĐỊNH HIỂN THỊ
+        if (_dist_to_player <= _view_distance && _angle_diff <= (_fov / 2) && !_is_blocked) {
+            visible = true;  
+        } else {
+            visible = false; 
+        }
+        
+        // GIÁC QUAN THỨ 6 (Áp sát gần 60px VÀ không bị kẹt tường)
+        if (_dist_to_player <= 60 && !_is_blocked) {
+            visible = true;  
+        }
+    }   
 }
 
 /// @description Bắn tia laser để xem có bị chặn bởi Tilemap tường không
