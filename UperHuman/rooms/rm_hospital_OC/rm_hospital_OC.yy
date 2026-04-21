@@ -10,9 +10,6 @@
     {"name":"inst_55FFA381","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
     {"name":"inst_2F935B40","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
     {"name":"inst_2EDCD926","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
-<<<<<<< HEAD
-    {"name":"inst_4899BE1F","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
-=======
     {"name":"inst_4CC675B8","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
     {"name":"inst_4B06DC99","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
     {"name":"inst_18C22E93","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
@@ -21,7 +18,6 @@
     {"name":"inst_7F0DA069","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
     {"name":"inst_7AB1E09C","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
     {"name":"inst_6DC512F4","path":"rooms/rm_hospital_OC/rm_hospital_OC.yy",},
->>>>>>> ac7c9c8 (fix: lighting system issue)
   ],
   "isDnd":false,
   "layers":[
@@ -30,13 +26,6 @@
         {"$GMRInstance":"v4","%Name":"inst_2EDCD926","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_2EDCD926","objectId":{"name":"obj_HUD","path":"objects/obj_HUD/obj_HUD.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":0.0,"y":256.0,},
         {"$GMRInstance":"v4","%Name":"inst_52CA2CB7","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_52CA2CB7","objectId":{"name":"obj_controller","path":"objects/obj_controller/obj_controller.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":0.0,"y":288.0,},
       ],"layers":[],"name":"Controller","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
-<<<<<<< HEAD
-    {"$GMRInstanceLayer":"","%Name":"Instances_Enemies","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[],"layers":[],"name":"Instances_Enemies","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
-    {"$GMRInstanceLayer":"","%Name":"Instances_Projectiles","depth":200,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[],"layers":[],"name":"Instances_Projectiles","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
-    {"$GMRInstanceLayer":"","%Name":"Instances_1","depth":300,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
-        {"$GMRInstance":"v4","%Name":"inst_55FFA381","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_55FFA381","objectId":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":64.0,"y":256.0,},
-        {"$GMRInstance":"v4","%Name":"inst_4899BE1F","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4899BE1F","objectId":{"name":"obj_director","path":"objects/obj_director/obj_director.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":0.0,"y":256.0,},
-=======
     {"$GMRInstanceLayer":"","%Name":"Instances_Enemies","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v4","%Name":"inst_4CC675B8","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4CC675B8","objectId":{"name":"obj_s_OC_1","path":"objects/obj_s_OC_1/obj_s_OC_1.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":384.0,"y":1344.0,},
         {"$GMRInstance":"v4","%Name":"inst_4B06DC99","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4B06DC99","objectId":{"name":"obj_s_OC_2","path":"objects/obj_s_OC_2/obj_s_OC_2.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":64.0,"y":1152.0,},
@@ -50,7 +39,6 @@
     {"$GMRInstanceLayer":"","%Name":"Instances_Projectiles","depth":200,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[],"layers":[],"name":"Instances_Projectiles","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRInstanceLayer":"","%Name":"Instances_1","depth":300,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v4","%Name":"inst_55FFA381","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_55FFA381","objectId":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":64.0,"y":256.0,},
->>>>>>> ac7c9c8 (fix: lighting system issue)
       ],"layers":[],"name":"Instances_1","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Collision","depth":400,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Collision","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":100,"SerialiseWidth":100,"TileCompressedData":[
           -101,29,1,15,-22,10,1,14,-3,29,1,15,-16,10,1,14,-7,29,1,15,-14,10,3,14,29,15,-11,10,3,14,29,15,-13,10,
