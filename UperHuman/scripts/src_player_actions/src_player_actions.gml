@@ -28,8 +28,14 @@ function player_movement() {
     var _bbox_side_x = (_hspd > 0) ? bbox_right : bbox_left;
     if (tilemap_get_at_pixel(collision_tilemap, _bbox_side_x + _hspd, bbox_top) != 0 || 
         tilemap_get_at_pixel(collision_tilemap, _bbox_side_x + _hspd, bbox_bottom) != 0) {
-        if (_hspd > 0) x = x - (x mod 16) + 15 - (bbox_right - x);
-        else x = x - (x mod 16) - (bbox_left - x);
+        var _dir = sign(_hspd);
+        if (_dir != 0) {
+            while (tilemap_get_at_pixel(collision_tilemap, _bbox_side_x + _dir, bbox_top) == 0 && 
+                   tilemap_get_at_pixel(collision_tilemap, _bbox_side_x + _dir, bbox_bottom) == 0) {
+                x += _dir;
+                _bbox_side_x += _dir;
+            }
+        }
         _hspd = 0;
     }
     x += _hspd;
@@ -37,8 +43,14 @@ function player_movement() {
     var _bbox_side_y = (_vspd > 0) ? bbox_bottom : bbox_top;
     if (tilemap_get_at_pixel(collision_tilemap, bbox_left, _bbox_side_y + _vspd) != 0 || 
         tilemap_get_at_pixel(collision_tilemap, bbox_right, _bbox_side_y + _vspd) != 0) {
-        if (_vspd > 0) y = y - (y mod 16) + 15 - (bbox_bottom - y);
-        else y = y - (y mod 16) - (bbox_top - y);
+        var _dir = sign(_vspd);
+        if (_dir != 0) {
+            while (tilemap_get_at_pixel(collision_tilemap, bbox_left, _bbox_side_y + _dir) == 0 && 
+                   tilemap_get_at_pixel(collision_tilemap, bbox_right, _bbox_side_y + _dir) == 0) {
+                y += _dir;
+                _bbox_side_y += _dir;
+            }
+        }
         _vspd = 0;
     }
     y += _vspd;
