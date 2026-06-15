@@ -25,3 +25,12 @@ current_weapon = 1; // Bắt đầu với súng lục
 var _start_gun = global.weapons[current_weapon];
 
 apply_weapon(_start_gun)
+
+// --- HỆ THỐNG ĐÈN PIN ---
+flashlight_on = false;
+// Tạo một struct để lưu thông số đèn pin, dễ dàng tuỳ biến về sau
+flashlight_stats = {
+    fov: 45,            // Góc sáng
+    view_dist: 500,     // Tầm xa
+    brightness: 1.0     // Độ sáng
+};

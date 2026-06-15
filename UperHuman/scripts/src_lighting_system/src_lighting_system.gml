@@ -29,11 +29,15 @@ function lighting_draw() {
         }
     }
 
-    // 3. Bắt đầu vẽ lên bạt bóng tối
+    // 3. Tính toán chu kỳ Ngày/Đêm (1 = Sáng nhất lúc 12:00, 0 = Tối nhất lúc 00:00)
+    var _time_factor = 0.5 - 0.5 * cos((global.time_minutes / 1440) * 2 * pi);
+    var _ambient_alpha = lerp(0.95, 0.3, _time_factor);
+    
+    // Bắt đầu vẽ lên bạt bóng tối
     surface_set_target(darkness_surf);
     
-    // Phủ màu đen (0.95 là tối thui, 0.25 là mờ mờ để test)
-    draw_clear_alpha(c_black, 0.75); 
+    // Phủ màu đen tuỳ theo thời gian trong ngày
+    draw_clear_alpha(c_black, _ambient_alpha); 
 
     // 4. Chuyển sang chế độ Cắt Lỗ
     gpu_set_blendmode(bm_subtract);
@@ -45,11 +49,16 @@ function lighting_draw() {
         var _px = obj_player.x - _cam_x;
         var _py = obj_player.y - _cam_y;
 
-        // -- THÔNG SỐ ĐÈN PIN --
-        // (Sau này bạn có thể đưa các số này vào JSON của từng khẩu súng!)
-        var _view_dist = 400; 
-        var _fov = 80;       
-        var _steps = 20;      
+        // -- TÍNH TOÁN FOV VÀ KHOẢNG CÁCH THEO THỜI GIAN --
+        var _view_dist = lerp(200, 600, _time_factor); 
+        var _fov = lerp(60, 180, _time_factor);       
+        var _steps = 30; // Số điểm vẽ (càng cao càng mượt nhưng nặng máy)
+        
+        // Ghi đè thông số nếu đèn pin đang bật
+        if (obj_player.flashlight_on) {
+            _fov = obj_player.flashlight_stats.fov;
+            _view_dist = obj_player.flashlight_stats.view_dist;
+        }
         
         var _start_angle = obj_player.image_angle - (_fov / 2);
         var _angle_step = _fov / _steps; 

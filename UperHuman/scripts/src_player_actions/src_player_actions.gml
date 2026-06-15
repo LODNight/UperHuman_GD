@@ -187,3 +187,19 @@ function player_switch_weapon() {
         }
     }
 }
+
+// ============================================
+// HỆ THỐNG ĐÈN PIN
+// ============================================
+/// @description: Hàm xử lý bật tắt đèn pin
+function player_flashlight() {
+    // Chỉ cho phép bật/tắt khi trời tối
+    if (global.is_night) {
+        if (keyboard_check_pressed(ord("4"))) {
+            flashlight_on = !flashlight_on;
+        }
+    } else {
+        // Nếu trời sáng thì tự động tắt đèn pin
+        flashlight_on = false;
+    }
+}

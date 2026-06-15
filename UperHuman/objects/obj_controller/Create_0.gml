@@ -7,6 +7,13 @@ window_set_fullscreen(true)
 window_set_cursor(cr_none);
 global.noise_level = 0;
 
+// --- HỆ THỐNG THỜI GIAN (DAY/NIGHT CYCLE) ---
+global.time_minutes = 12 * 60; // Bắt đầu từ 12:00 trưa (tính bằng phút)
+// 1 giây ngoài đời = 5 phút trong game
+// Tốc độ = 5 phút / số frame mỗi giây
+global.time_speed = 5 / game_get_speed(gamespeed_fps); 
+global.is_night = false; // Trạng thái trời tối
+
 cursor_sprite = spr_aim;
 // Khởi tạo biến chứa lớp sương mù
 darkness_surf = -1;

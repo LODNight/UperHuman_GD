@@ -22,3 +22,20 @@ draw_stat_bar(
 	obj_player.hp_max, 
 	_hp_color
 );
+
+// --- HIỂN THỊ THỜI GIAN (ĐỒNG HỒ) ---
+var _hh = floor(global.time_minutes / 60);
+var _mm = floor(global.time_minutes mod 60);
+var _hh_str = string(_hh);
+if (_hh < 10) _hh_str = "0" + _hh_str;
+var _mm_str = string(_mm);
+if (_mm < 10) _mm_str = "0" + _mm_str;
+
+var _time_str = _hh_str + ":" + _mm_str;
+var _time_color = global.is_night ? c_ltgray : c_yellow;
+
+draw_set_font(-1); // Đổi thành font của bạn nếu có
+draw_set_halign(fa_center);
+draw_set_valign(fa_top);
+draw_text_color(_gui_w / 2, 20, "TIME: " + _time_str, _time_color, _time_color, _time_color, _time_color, 1);
+draw_set_halign(fa_left);
