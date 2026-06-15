@@ -22,6 +22,10 @@ switch (state) {
         enemy_state_attack();
         break;
 
+    case ENEMY_STATE.PREPARE_ATTACK:
+        enemy_state_prepare_attack();
+        break;
+
     case ENEMY_STATE.HIT:
         enemy_state_hit();
         break;

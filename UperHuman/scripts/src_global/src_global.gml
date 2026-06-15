@@ -6,4 +6,5 @@ enum ENEMY_STATE {
 	DEAD,	// Chết
 	ATTACK,	// Tấn công
 	INVESTIGATE, // Đi tuần	
+	PREPARE_ATTACK // Khựng lại chuẩn bị đánh
 }

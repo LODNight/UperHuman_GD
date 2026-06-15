@@ -8,7 +8,7 @@ function enemy_check_vision() {
     var _view_distance = 400;
     var _fov = 90;
 
-    var _angle_diff = abs(angle_difference(direction, _dir));
+    var _angle_diff = abs(angle_difference(facing_dir, _dir)); // SỬ DỤNG FACING_DIR thay vì direction
 
     // Trong tầm + trong góc
     if (_dist <= _view_distance && _angle_diff <= (_fov / 2)) {
@@ -29,8 +29,15 @@ function can_player_see(_x, _y) {
     var _dist = point_distance(obj_player.x, obj_player.y, _x, _y);
     if (_dist > 400) return false;
 
-    if (!check_los_tilemap(obj_player.x, obj_player.y, _x, _y)) {
-        return true;
+    // Lấy góc nhìn của Player (FOV)
+    var _player_dir_to_target = point_direction(obj_player.x, obj_player.y, _x, _y);
+    var _angle_diff = abs(angle_difference(obj_player.image_angle, _player_dir_to_target));
+
+    // Player có FOV khoảng 180 độ (tuỳ chỉnh theo ý muốn)
+    if (_angle_diff <= 90) {
+        if (!check_los_tilemap(obj_player.x, obj_player.y, _x, _y)) {
+            return true;
+        }
     }
 
     return false;

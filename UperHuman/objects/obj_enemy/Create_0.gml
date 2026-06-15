@@ -4,6 +4,7 @@ state = ENEMY_STATE.IDLE;
 hp = hp_max;
 attack_timer = 0; 
 hit_timer = 0;
+prepare_timer = 0;
 
 // ===== BIẾN HỆ THỐNG CHUNG =====
 // Dùng cho Knockback khi trúng đạn
@@ -29,7 +30,16 @@ image_speed = 1;
 image_index = 0;
 
 direction = irandom(360); 
-image_angle = direction;
+facing_dir = direction; // Tách riêng hướng nhìn thực tế và hướng di chuyển
+image_angle = facing_dir;
+
+// ===== MEMORY SYSTEM (TRÍ NHỚ) =====
+lose_target_timer = 0;
+last_known_x = x;
+last_known_y = y;
+
+// ===== INVESTIGATE SYSTEM =====
+investigate_phase = 0; // 0: Đang tới điểm nghi ngờ, 1: Đang quét tìm
 
 // ===== HORDE SYSTEM =====
 aggro_target_x = x;

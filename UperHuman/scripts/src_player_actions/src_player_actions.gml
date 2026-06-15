@@ -203,3 +203,16 @@ function player_flashlight() {
         flashlight_on = false;
     }
 }
+
+// ============================================
+// XỬ LÝ SÁT THƯƠNG
+// ============================================
+/// @description: Hàm nhận sát thương
+function player_take_damage(_damage, _dir, _force) {
+    if (stun_timer <= 0) {
+        hp -= _damage;
+        stun_timer = 45; // Tăng i-frames lên 0.75s (45 frames)
+        knockback_dir = _dir;
+        knockback_spd = _force; // Dùng lực truyền vào thay vì hardcode 2
+    }
+}

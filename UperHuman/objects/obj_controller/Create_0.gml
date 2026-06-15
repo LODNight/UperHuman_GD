@@ -47,3 +47,6 @@ for (var _yy = 0; _yy < _vcells; _yy++) {
 
 // Mặc định là TẮT vẽ đường đi
 global.debug_show_paths = false;
+
+// Hệ thống Horde Optimization
+global.shared_enemy_list = ds_list_create();
